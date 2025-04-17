@@ -16,9 +16,8 @@ Pode ser utilizado em sistemas CRM, ERP etc.
 - [Instalação](#-instalação)
 - [Como Usar](#-como-usar)
 - [Exemplos](#-exemplos)
-  - [Populando Empresas](#populando-uma-tabela-de-empresas)
+  - [Populando Empresas](#--populando-uma-tabela-de-empresas)
   - [Gerando Contas a Receber](#gerando-contas-a-receber)
-  - [Populando Prontuários](#populando-dados-de-prontuário-médico)
 - [Documentação da API](#-documentação-da-api)
   - [Métodos para Documentos](#métodos-para-documentos)
   - [Métodos para Dados Pessoais](#métodos-para-dados-pessoais)
@@ -31,11 +30,13 @@ Pode ser utilizado em sistemas CRM, ERP etc.
 - [Contribuindo](#-contribuindo)
 - [Licença](#-licença)
 
-## ✨ Recursos [🔝](#-sumário)
+[🔝](#-sumário)
+## ✨ Recursos 
 
 Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, incluindo:
 
-### 📄 Documentos Brasileiros [🔝](#-sumário)
+[🔝](#-sumário)
+### 📄 Documentos Brasileiros 
 - CPF com validação de dígitos verificadores
 - CNPJ com validação de dígitos verificadores
 - CNH (Carteira Nacional de Habilitação)
@@ -46,21 +47,24 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - RENAVAM
 - Placa de Veículo (padrão antigo e Mercosul)
 
-### 👤 Dados Pessoais [🔝](#-sumário)
+[🔝](#-sumário)
+### 👤 Dados Pessoais 
 - Nomes e sobrenomes (masculinos/femininos)
 - Nomes completos
 - Telefones fixos com DDD
 - Telefones celulares com DDD
 - Endereços de e-mail
 
-### 🏢 Dados Empresariais e Financeiros [🔝](#-sumário)
+[🔝](#-sumário)
+### 🏢 Dados Empresariais e Financeiros 
 - Razão Social
 - Nome Fantasia
 - Números de documentos fiscais
 - Contas bancárias
 - Cartões de crédito (Visa, Mastercard, Amex, Discover)
 
-### 🏠 Endereços Completos [🔝](#-sumário)
+[🔝](#-sumário)
+### 🏠 Endereços Completos 
 - Logradouros (Rua, Avenida, etc.)
 - Número
 - Complemento
@@ -69,12 +73,14 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - UF
 - CEP formatado
 
-### 💰 Valores e Datas [🔝](#-sumário)
+[🔝](#-sumário)
+### 💰 Valores e Datas 
 - Datas aleatórias dentro de um intervalo
 - Valores monetários
 - Códigos de documentos comerciais
 
-### 🏥 Dados de Saúde [🔝](#-sumário)
+[🔝](#-sumário)
+### 🏥 Dados de Saúde 
 - Tipo sanguíneo (A+, A-, B+, B-, AB+, AB-, O+, O-)
 - Altura (em centímetros)
 - Peso (em quilogramas)
@@ -83,7 +89,8 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - Especialidades médicas
 - Planos de saúde
 
-### 🎓 Dados Acadêmicos [🔝](#-sumário)
+[🔝](#-sumário)
+### 🎓 Dados Acadêmicos 
 - Nome de instituições de ensino
 - Nomes de cursos de graduação
 - Áreas de formação acadêmica
@@ -92,15 +99,17 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - Datas de formatura
 - Títulos de monografias ou trabalhos acadêmicos
 
-## 💻 Instalação [🔝](#-sumário)
+[🔝](#-sumário)
+## 💻 Instalação 
 
 1. Faça o download dos arquivos fonte ou clone este repositório
 2. Adicione o arquivo `FakeDataGenerator.pas` ao seu projeto Delphi/Lazarus
 3. Adicione `FakeDataGenerator` na cláusula `uses` de suas units
 
-## 🚀 Como Usar [🔝](#-sumário)
+[🔝](#-sumário)
+## 🚀 Como Usar 
 
-- Exemplo básico de uso:
+## - Exemplo básico de uso:
 
 ```pascal
 uses
@@ -125,9 +134,11 @@ begin
   end;
 end;
 ```
-## 📝 Exemplos [🔝](#-sumário)
+[🔝](#-sumário)
+## 📝 Exemplos 
 
-- Populando uma tabela de empresas [🔝](#-sumário)
+[🔝](#-sumário)
+## - Populando uma tabela de empresas 
 
 ```pascal
 
@@ -169,7 +180,8 @@ end;
 
 ```
 
-- Gerando contas a receber [🔝](#-sumário)
+[🔝](#-sumário)
+## Gerando contas a receber 
 
 ```pascal
 procedure GerarContasReceber(IDEmpresa, IDPessoa: Integer; Quantidade: Integer);
@@ -209,7 +221,8 @@ end;
 
 ```
 
-- Populando dados de prontuário médico [🔝](#-sumário)
+[🔝](#-sumário)
+## - Populando dados de prontuário médico 
 
 ```pascal
 procedure PopularProntuarios(Quantidade: Integer);
@@ -250,11 +263,13 @@ begin
 end;
 ```
 
-## 📖 Documentação da API [🔝](#-sumário)
+[🔝](#-sumário)
+## 📖 Documentação da API 
 
 ### TFakeDataGenerator
 
-#### Métodos para Documentos [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Documentos 
 
 ```pascal
 // Gera um CPF válido. Se Formatado = True, retorna no formato XXX.XXX.XXX-XX.
@@ -285,7 +300,8 @@ function GerarTituloEleitor(Formatado: Boolean = True): string;
 function GerarPlacaVeiculo(Mercosul: Boolean = False): string;
 ```
 
-#### Métodos para Dados Pessoais [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Dados Pessoais 
 
 ```pascal
 // Gera um nome (primeiro nome) aleatório.
@@ -319,7 +335,8 @@ function GerarProfissao: string;
 function GerarEscolaridade: string;
 ```
 
-#### Métodos para Dados Empresariais e Financeiros [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Dados Empresariais e Financeiros 
 
 ```pascal
 // Gera uma razão social para empresa.
@@ -353,7 +370,8 @@ function GerarCargo: string;
 function GerarChavePIX(TipoChave: string = 'aleatoria'): string;
 ```
 
-#### Métodos para Endereços [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Endereços 
 
 ```pascal
 // Gera um logradouro aleatório (tipo + nome da rua).
@@ -378,7 +396,8 @@ function GerarUF: string;
 function GerarCEP(Formatado: Boolean = True): string;
 ```
 
-#### Métodos para Valores e Datas [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Valores e Datas 
 
 ```pascal
 // Gera uma data aleatória entre DataInicial e DataFinal.
@@ -403,7 +422,8 @@ function GerarAliquotaImposto(TipoImposto: string = 'ICMS'): Double;
 function GerarNotaFiscal(UF: string = ''): string;
 ```
 
-#### Métodos para Dados de Saúde [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Dados de Saúde 
 
 ```pascal
 // Gera um tipo sanguíneo (A+, A-, B+, B-, AB+, AB-, O+, O-).
@@ -428,7 +448,8 @@ function GerarEspecialidadeMedica: string;
 function GerarPlanoSaude: string;
 ```
 
-#### Métodos para Dados Acadêmicos [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos para Dados Acadêmicos 
 
 ```pascal
 // Gera um nome de instituição de ensino aleatório.
@@ -453,7 +474,8 @@ function GerarDataFormatura(AnoInicio: Integer = 0): TDateTime;
 function GerarTituloMonografia: string;
 ```
 
-#### Métodos Utilitários [🔝](#-sumário)
+[🔝](#-sumário)
+#### Métodos Utilitários 
 
 ```pascal
 // Remove todos os caracteres não-numéricos de uma string.
@@ -470,7 +492,8 @@ function GerarDigitosCNPJ(const Digits: string): string;
 ```
 
 
-## 🤝 Contribuindo [🔝](#-sumário)
+[🔝](#-sumário)
+## 🤝 Contribuindo 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests com melhorias, correções ou novas funcionalidades.
 
 Faça um fork deste repositório
@@ -479,7 +502,8 @@ Faça commit das suas alterações (git commit -m 'Adiciona nova funcionalidade'
 Faça push para a branch (git push origin feature/nova-funcionalidade)
 Abra um Pull Request
 
-## 📄 Licença [🔝](#-sumário)
+[🔝](#-sumário)
+## 📄 Licença 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
