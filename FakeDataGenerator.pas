@@ -21,6 +21,11 @@ type
     FInstituicoesEnsino: TStringList; 
     FCursosGraduacao: TStringList;  
     FAreasFormacao  : TStringList;
+    FMarcasVeiculos : TStringList;  
+    FModelosVeiculos: TStringList;  
+    FCoresVeiculos  : TStringList;  
+    FCombustiveis   : TStringList;  
+
     function GerarDigitosCPF(const Digits: string): string;
     function GerarDigitosCNPJ(const Digits: string): string;
     function GerarDigitosModulo11(const Digits: string; Peso: Integer): string;
@@ -106,6 +111,15 @@ type
     function GerarEAN13: string;
     function GerarCID: string;
     function GerarProcessoJudicial: string;
+
+    { Dados de Veículos }
+    function GerarMarcaVeiculo: string;
+    function GerarModeloVeiculo(const Marca: string = ''): string;
+    function GerarAnoVeiculo(IdadeMaxima: Integer = 20): Integer;
+    function GerarChassi: string;
+    function GerarCor: string;
+    function GerarTipoCombustivel: string;
+    function GerarQuilometragem(AnoVeiculo: Integer): Integer;
   end;
 
 implementation
@@ -129,6 +143,11 @@ begin
   FInstituicoesEnsino := TStringList.Create;
   FCursosGraduacao    := TStringList.Create;
   FAreasFormacao      := TStringList.Create;
+
+  FMarcasVeiculos  := TStringList.Create;
+  FModelosVeiculos := TStringList.Create;
+  FCoresVeiculos   := TStringList.Create;
+  FCombustiveis    := TStringList.Create;
 
   // Inicializar listas com dados
   with FNomesMasculinos do
@@ -287,6 +306,141 @@ begin
     Add('Linguística, Letras e Artes');
     Add('Multidisciplinar');
   end;
+
+  // Preencher marcas de veículos
+  with FMarcasVeiculos do
+  begin
+    Add('Volkswagen');
+    Add('Fiat');
+    Add('Chevrolet');
+    Add('Ford');
+    Add('Toyota');
+    Add('Honda');
+    Add('Hyundai');
+    Add('Jeep');
+    Add('Renault');
+    Add('Nissan');
+    Add('BMW');
+    Add('Mercedes-Benz');
+    Add('Audi');
+    Add('Mitsubishi');
+    Add('Kia');
+    Add('Peugeot');
+    Add('Citroën');
+    Add('Subaru');
+    Add('Suzuki');
+    Add('Land Rover');
+  end;
+  
+  // Preencher modelos de veículos (com prefixo da marca para associação)
+  with FModelosVeiculos do
+  begin
+    // Volkswagen
+    Add('Volkswagen|Gol');
+    Add('Volkswagen|Fox');
+    Add('Volkswagen|Polo');
+    Add('Volkswagen|Golf');
+    Add('Volkswagen|Jetta');
+    Add('Volkswagen|T-Cross');
+    Add('Volkswagen|Tiguan');
+    Add('Volkswagen|Saveiro');
+    Add('Volkswagen|Amarok');
+    Add('Volkswagen|Virtus');
+    // Fiat
+    Add('Fiat|Uno');
+    Add('Fiat|Mobi');
+    Add('Fiat|Argo');
+    Add('Fiat|Cronos');
+    Add('Fiat|Toro');
+    Add('Fiat|Strada');
+    Add('Fiat|Fiorino');
+    Add('Fiat|Pulse');
+    Add('Fiat|Ducato');
+    Add('Fiat|500');
+    // Chevrolet
+    Add('Chevrolet|Onix');
+    Add('Chevrolet|Prisma');
+    Add('Chevrolet|Cruze');
+    Add('Chevrolet|Tracker');
+    Add('Chevrolet|S10');
+    Add('Chevrolet|Spin');
+    Add('Chevrolet|Cobalt');
+    Add('Chevrolet|Montana');
+    Add('Chevrolet|Equinox');
+    Add('Chevrolet|Camaro');
+    // Ford
+    Add('Ford|Ka');
+    Add('Ford|EcoSport');
+    Add('Ford|Ranger');
+    Add('Ford|Focus');
+    Add('Ford|Fiesta');
+    Add('Ford|Edge');
+    Add('Ford|Fusion');
+    Add('Ford|Bronco');
+    Add('Ford|Mustang');
+    Add('Ford|Territory');
+    // Toyota
+    Add('Toyota|Corolla');
+    Add('Toyota|Yaris');
+    Add('Toyota|Hilux');
+    Add('Toyota|SW4');
+    Add('Toyota|RAV4');
+    Add('Toyota|Etios');
+    Add('Toyota|Camry');
+    Add('Toyota|Prius');
+    Add('Toyota|Land Cruiser');
+    Add('Toyota|Corolla Cross');
+    // Honda
+    Add('Honda|Civic');
+    Add('Honda|Fit');
+    Add('Honda|HR-V');
+    Add('Honda|WR-V');
+    Add('Honda|CR-V');
+    Add('Honda|City');
+    Add('Honda|Accord');
+    Add('Honda|Jazz');
+    // Outros modelos...
+  end;
+  
+  // Preencher cores de veículos
+  with FCoresVeiculos do
+  begin
+    Add('Preto');
+    Add('Branco');
+    Add('Prata');
+    Add('Cinza');
+    Add('Vermelho');
+    Add('Azul');
+    Add('Verde');
+    Add('Amarelo');
+    Add('Marrom');
+    Add('Bege');
+    Add('Dourado');
+    Add('Vinho');
+    Add('Laranja');
+    Add('Azul Marinho');
+    Add('Grafite');
+    Add('Bronze');
+    Add('Branco Perolizado');
+    Add('Preto Metálico');
+    Add('Prata Metálico');
+    Add('Vermelho Metálico');
+  end;
+  
+  // Preencher tipos de combustível
+  with FCombustiveis do
+  begin
+    Add('Gasolina');
+    Add('Etanol');
+    Add('Flex');
+    Add('Diesel');
+    Add('GNV');
+    Add('Híbrido');
+    Add('Elétrico');
+    Add('Diesel S10');
+    Add('Gasolina Aditivada');
+    Add('Etanol Aditivado');
+  end;
 end;
 
 destructor TFakeDataGenerator.Destroy;
@@ -304,6 +458,10 @@ begin
   FInstituicoesEnsino.Free;
   FCursosGraduacao.Free;
   FAreasFormacao.Free;
+  FMarcasVeiculos.Free;
+  FModelosVeiculos.Free;
+  FCoresVeiculos.Free;
+  FCombustiveis.Free;
   inherited;
 end;
 
@@ -2182,6 +2340,160 @@ begin
     Titulo := Titulo + ': um estudo de caso';
   
   Result := Titulo;
+end;
+
+{ Dados de Veículos }
+function TFakeDataGenerator.GerarMarcaVeiculo: string;
+begin
+  Result := FMarcasVeiculos[Random(FMarcasVeiculos.Count)];
+end;
+
+function TFakeDataGenerator.GerarModeloVeiculo(const Marca: string = ''): string;
+var
+  MarcaSelecionada: string;
+  ModelosMarca: TStringList;
+  i, ModeloIndex: Integer;
+  ModeloInfo: string;
+begin
+  // Se não foi especificada uma marca, gera aleatoriamente
+  if Marca = '' then
+    MarcaSelecionada := GerarMarcaVeiculo
+  else
+    MarcaSelecionada := Marca;
+    
+  // Cria uma lista temporária para armazenar apenas os modelos da marca selecionada
+  ModelosMarca := TStringList.Create;
+  try
+    // Procura por modelos da marca específica
+    for i := 0 to FModelosVeiculos.Count - 1 do
+    begin
+      ModeloInfo := FModelosVeiculos[i];
+      if Pos(MarcaSelecionada + '|', ModeloInfo) = 1 then
+        ModelosMarca.Add(ModeloInfo);
+    end;
+    
+    // Se encontrou modelos para a marca, seleciona um aleatoriamente
+    if ModelosMarca.Count > 0 then
+    begin
+      ModeloIndex := Random(ModelosMarca.Count);
+      ModeloInfo := ModelosMarca[ModeloIndex];
+      // Retorna apenas a parte do modelo (após o | )
+      Result := Copy(ModeloInfo, Pos('|', ModeloInfo) + 1, Length(ModeloInfo));
+    end
+    else
+      // Se não encontrou modelos para a marca, retorna um texto genérico
+      Result := 'Modelo ' + IntToStr(Random(100));
+  finally
+    ModelosMarca.Free;
+  end;
+end;
+
+function TFakeDataGenerator.GerarAnoVeiculo(IdadeMaxima: Integer = 20): Integer;
+var
+  AnoAtual, IdadeVeiculo: Integer;
+begin
+  AnoAtual := YearOf(Date);
+  
+  // Distribuição mais realista para idade de veículos
+  // Maior probabilidade para veículos entre 0 e 10 anos
+  if Random(100) < 70 then
+    IdadeVeiculo := Random(10) // 70% dos veículos têm até 10 anos
+  else
+    IdadeVeiculo := 10 + Random(IdadeMaxima - 9); // 30% têm entre 11 e IdadeMaxima anos
+    
+  Result := AnoAtual - IdadeVeiculo;
+end;
+
+function TFakeDataGenerator.GerarChassi: string;
+const
+  ValidChars = '0123456789ABCDEFGHJKLMNPRSTUVWXYZ'; // Sem I, O, Q
+var
+  i: Integer;
+  Chassi: string;
+begin
+  // Formato padrão de chassi: 17 caracteres
+  // 3 primeiros: WMI (World Manufacturer Identifier)
+  // 6 seguintes: Descrição do veículo
+  // 1 verificador
+  // 1 ano modelo
+  // 1 fábrica
+  // 5 últimos: número sequencial
+  
+  SetLength(Chassi, 17);
+  
+  // Gerando os 17 caracteres
+  for i := 1 to 17 do
+    Chassi[i] := ValidChars[Random(Length(ValidChars)) + 1];
+  
+  // Geralmente o 10º caractere indica o ano do modelo
+  Chassi[10] := ValidChars[Random(10) + 1]; // Anos mais frequentes
+  
+  Result := Chassi;
+end;
+
+function TFakeDataGenerator.GerarCor: string;
+begin
+  Result := FCoresVeiculos[Random(FCoresVeiculos.Count)];
+end;
+
+function TFakeDataGenerator.GerarTipoCombustivel: string;
+var
+  Probabilidades: array[0..6] of Integer;
+  ValorSorteio, SomaProbabilidades, i: Integer;
+begin
+  // Probabilidades para cada tipo de combustível (baseado na frota brasileira)
+  Probabilidades[0] := 45; // 45% Flex
+  Probabilidades[1] := 20; // 20% Gasolina
+  Probabilidades[2] := 15; // 15% Diesel
+  Probabilidades[3] := 10; // 10% Etanol
+  Probabilidades[4] := 5;  // 5% GNV
+  Probabilidades[5] := 3;  // 3% Híbrido
+  Probabilidades[6] := 2;  // 2% Elétrico
+  
+  // Calcula soma das probabilidades
+  SomaProbabilidades := 0;
+  for i := 0 to 6 do
+    SomaProbabilidades := SomaProbabilidades + Probabilidades[i];
+  
+  // Sorteia um valor dentro do range de probabilidades
+  ValorSorteio := Random(SomaProbabilidades) + 1;
+  
+  // Determina qual combustível foi sorteado
+  SomaProbabilidades := 0;
+  for i := 0 to 6 do
+  begin
+    SomaProbabilidades := SomaProbabilidades + Probabilidades[i];
+    if ValorSorteio <= SomaProbabilidades then
+    begin
+      Result := FCombustiveis[i];
+      Break;
+    end;
+  end;
+end;
+
+function TFakeDataGenerator.GerarQuilometragem(AnoVeiculo: Integer): Integer;
+var
+  AnoAtual, IdadeVeiculo, MediaKmAnual: Integer;
+  KmBase, Variacao: Double;
+begin
+  AnoAtual := YearOf(Date);
+  IdadeVeiculo := AnoAtual - AnoVeiculo;
+  
+  // Média de quilometragem anual (entre 10.000 e 20.000 km)
+  MediaKmAnual := 10000 + Random(10001);
+  
+  // Quilometragem base (média anual * idade)
+  KmBase := MediaKmAnual * IdadeVeiculo;
+  
+  // Adiciona variação de até 30% para mais ou para menos
+  Variacao := (Random * 0.6) - 0.3; // -30% a +30%
+  
+  // Calcula quilometragem final com variação e arredonda
+  Result := Round(KmBase * (1 + Variacao));
+  
+  // Garante que não seja negativo (para veículos novos)
+  if Result < 0 then
+    Result := Random(1000); // Veículo novo com poucos km
 end;
 
 end.

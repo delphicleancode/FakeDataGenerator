@@ -13,6 +13,7 @@ Pode ser utilizado em sistemas CRM, ERP etc.
   - [Valores e Datas](#-valores-e-datas)
   - [Dados de Saúde](#-dados-de-saúde)
   - [Dados Acadêmicos](#-dados-acadêmicos)
+  - [Dados de Veículos](#-dados-de-veículos)
 - [Instalação](#-instalação)
 - [Como Usar](#-como-usar)
 - [Exemplos](#-exemplos)
@@ -26,6 +27,7 @@ Pode ser utilizado em sistemas CRM, ERP etc.
   - [Métodos para Valores e Datas](#métodos-para-valores-e-datas)
   - [Métodos para Dados de Saúde](#métodos-para-dados-de-saúde)
   - [Métodos para Dados Acadêmicos](#métodos-para-dados-acadêmicos)
+  - [Métodos para Dados de Veículos](#métodos-para-dados-de-veículos)
   - [Métodos Utilitários](#métodos-utilitários)
 - [Contribuindo](#-contribuindo)
 - [Licença](#-licença)
@@ -98,6 +100,16 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - Coeficientes de rendimento
 - Datas de formatura
 - Títulos de monografias ou trabalhos acadêmicos
+
+[🔝](#-sumário)
+### 🚗 Dados de Veículos
+- Marcas de veículos populares no Brasil
+- Modelos específicos para cada marca
+- Anos de fabricação com distribuição realista
+- Números de chassi válidos
+- Cores de veículos
+- Tipos de combustível (Flex, Gasolina, Diesel, etc.)
+- Quilometragem proporcional à idade do veículo
 
 [🔝](#-sumário)
 ## 💻 Instalação 
@@ -256,6 +268,62 @@ begin
       qryProntuarios.ParamByName('DATA').AsDateTime := Now;
       
       qryProntuarios.ExecSQL;
+    end;
+  finally
+    FakeData.Free;
+  end;
+end;
+```
+
+[🔝](#-sumário)
+## - Populando dados de veículos
+
+```pascal
+procedure PopularVeiculos(Quantidade: Integer);
+var
+  FakeData: TFakeDataGenerator;
+  i: Integer;
+  IDPessoa: Integer;
+  Marca: string;
+  Modelo: string;
+  AnoFabricacao: Integer;
+begin
+  FakeData := TFakeDataGenerator.Create;
+  try
+    for i := 1 to Quantidade do
+    begin
+      // Obter pessoa aleatória do banco de dados
+      qryPessoas.Close;
+      qryPessoas.Open;
+      qryPessoas.First;
+      qryPessoas.MoveBy(Random(qryPessoas.RecordCount));
+      IDPessoa := qryPessoas.FieldByName('ID').AsInteger;
+      
+      // Gerar dados do veículo
+      Marca := FakeData.GerarMarcaVeiculo;
+      Modelo := FakeData.GerarModeloVeiculo(Marca);
+      AnoFabricacao := FakeData.GerarAnoVeiculo;
+      
+      qryVeiculos.Close;
+      qryVeiculos.SQL.Text := 
+        'INSERT INTO VEICULOS (ID_PROPRIETARIO, MARCA, MODELO, ANO_FABRICACAO, ' +
+        'ANO_MODELO, CHASSI, COR, COMBUSTIVEL, PLACA, RENAVAM, QUILOMETRAGEM) ' +
+        'VALUES (:PROP, :MARCA, :MODELO, :ANOFAB, :ANOMOD, :CHASSI, :COR, ' +
+        ':COMB, :PLACA, :RENAVAM, :KM)';
+      
+      qryVeiculos.ParamByName('PROP').AsInteger := IDPessoa;
+      qryVeiculos.ParamByName('MARCA').AsString := Marca;
+      qryVeiculos.ParamByName('MODELO').AsString := Modelo;
+      qryVeiculos.ParamByName('ANOFAB').AsInteger := AnoFabricacao;
+      qryVeiculos.ParamByName('ANOMOD').AsInteger := AnoFabricacao + Random(2); // Ano modelo pode ser igual ou até 1 ano mais recente
+      qryVeiculos.ParamByName('CHASSI').AsString := FakeData.GerarChassi;
+      qryVeiculos.ParamByName('COR').AsString := FakeData.GerarCor;
+      qryVeiculos.ParamByName('COMB').AsString := FakeData.GerarTipoCombustivel;
+      qryVeiculos.ParamByName('PLACA').AsString := FakeData.GerarPlacaVeiculo(Random(2) = 1); // 50% chance de usar placa Mercosul
+      qryVeiculos.ParamByName('RENAVAM').AsString := FakeData.GerarRENAVAM;
+      qryVeiculos.ParamByName('KM').AsInteger := FakeData.GerarQuilometragem(AnoFabricacao);
+      
+      qryVeiculos.ExecSQL;
     end;
   finally
     FakeData.Free;
@@ -475,7 +543,33 @@ function GerarTituloMonografia: string;
 ```
 
 [🔝](#-sumário)
-#### Métodos Utilitários 
+#### Métodos para Dados de Veículos
+
+```pascal
+// Gera uma marca de veículo popular no Brasil.
+function GerarMarcaVeiculo: string;
+
+// Gera um modelo compatível com a marca especificada. Se a marca for vazia, escolhe aleatoriamente.
+function GerarModeloVeiculo(const Marca: string = ''): string;
+
+// Gera um ano de fabricação com distribuição realista (mais veículos novos). Limita a idade máxima.
+function GerarAnoVeiculo(IdadeMaxima: Integer = 20): Integer;
+
+// Gera um número de chassi no formato padrão de 17 caracteres.
+function GerarChassi: string;
+
+// Gera uma cor de veículo.
+function GerarCor: string;
+
+// Gera um tipo de combustível com distribuição baseada na frota brasileira.
+function GerarTipoCombustivel: string;
+
+// Gera uma quilometragem plausível baseada na idade do veículo.
+function GerarQuilometragem(AnoVeiculo: Integer): Integer;
+```
+
+[🔝](#-sumário)
+#### Métodos Utilitários
 
 ```pascal
 // Remove todos os caracteres não-numéricos de uma string.
@@ -491,9 +585,8 @@ function GerarDigitosCPF(const Digits: string): string;
 function GerarDigitosCNPJ(const Digits: string): string;
 ```
 
-
 [🔝](#-sumário)
-## 🤝 Contribuindo 
+## 🤝 Contribuindo
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests com melhorias, correções ou novas funcionalidades.
 
 Faça um fork deste repositório
@@ -503,7 +596,7 @@ Faça push para a branch (git push origin feature/nova-funcionalidade)
 Abra um Pull Request
 
 [🔝](#-sumário)
-## 📄 Licença 
+## 📄 Licença
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
