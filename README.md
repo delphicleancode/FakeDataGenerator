@@ -10,6 +10,12 @@ Pode ser utilizado em sistemas CRM, ERP etc.
 - [Como Usar](#-como-usar)
 - [Exemplos](#-exemplos)
 - [Documentação da API](#-documentação-da-api)
+  - [Dados Pessoais](#-dados-pessoais)
+  - [Dados Empresariais e Financeiros](#-dados-empresariais-e-financeiros)
+  - [Endereços Completos](#-endereços-completos)
+  - [Valores e Datas](#-valores-e-datas)
+  - [Dados de Saúde](#-dados-de-saúde)
+  - [Dados Acadêmicos](#-dados-acadêmicos)
 - [Contribuindo](#-contribuindo)
 - [Licença](#-licença)
 
@@ -64,6 +70,15 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - Medicamentos
 - Especialidades médicas
 - Planos de saúde
+
+### 🎓 Dados Acadêmicos
+- Nome de instituições de ensino
+- Nomes de cursos de graduação
+- Áreas de formação acadêmica
+- Números de matrículas acadêmicas
+- Coeficientes de rendimento
+- Datas de formatura
+- Títulos de monografias ou trabalhos acadêmicos
 
 ## 💻 Instalação
 
@@ -399,6 +414,30 @@ function GerarEspecialidadeMedica: string;
 
 // Gera um nome de plano de saúde.
 function GerarPlanoSaude: string;
+```
+### 🎓 Dados Acadêmicos
+
+```pascal
+// Gera um nome de instituição de ensino aleatório.
+function GerarNomeInstituicaoEnsino: string;
+
+// Gera um nome de curso de graduação aleatório.
+function GerarCursoGraduacao: string;
+
+// Gera uma área de formação acadêmica aleatória.
+function GerarAreaFormacao: string;
+
+// Gera um número de matrícula acadêmica no formato AAANNNNND (AA=ano, NNNNN=sequencial, D=dígito verificador).
+function GerarMatriculaAcademica: string;
+
+// Gera um coeficiente de rendimento (CR) entre 0 e 10 com distribuição mais realista.
+function GerarCoeficienteRendimento: Double; // 0 a 10
+
+// Gera uma data de formatura com base no ano de início do curso.
+function GerarDataFormatura(AnoInicio: Integer = 0): TDateTime;
+
+// Gera um título de monografia ou trabalho acadêmico.
+function GerarTituloMonografia: string;
 ```
 
 #### Métodos Utilitários

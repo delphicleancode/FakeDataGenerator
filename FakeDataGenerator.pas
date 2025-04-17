@@ -18,7 +18,9 @@ type
     FMedicamentos   : TStringList;  
     FEspecialidades : TStringList;  
     FPlanosSaude    : TStringList;    
-
+    FInstituicoesEnsino: TStringList; 
+    FCursosGraduacao: TStringList;  
+    FAreasFormacao  : TStringList;
     function GerarDigitosCPF(const Digits: string): string;
     function GerarDigitosCNPJ(const Digits: string): string;
     function GerarDigitosModulo11(const Digits: string; Peso: Integer): string;
@@ -69,7 +71,16 @@ type
     function GerarPressaoArterial: string;
     function GerarMedicamento: string;
     function GerarEspecialidadeMedica: string;
-    function GerarPlanoSaude: string;    
+    function GerarPlanoSaude: string;  
+
+    { Dados Acadêmicos }
+    function GerarNomeInstituicaoEnsino: string;
+    function GerarCursoGraduacao: string;
+    function GerarAreaFormacao: string;
+    function GerarMatriculaAcademica: string;
+    function GerarCoeficienteRendimento: Double; // 0 a 10
+    function GerarDataFormatura(AnoInicio: Integer = 0): TDateTime;
+    function GerarTituloMonografia: string;      
     
     { Dados de Endereço }
     function GerarLogradouro: string;
@@ -114,6 +125,10 @@ begin
   FMedicamentos    := TStringList.Create;
   FEspecialidades  := TStringList.Create;
   FPlanosSaude     := TStringList.Create;
+  
+  FInstituicoesEnsino := TStringList.Create;
+  FCursosGraduacao    := TStringList.Create;
+  FAreasFormacao      := TStringList.Create;
 
   // Inicializar listas com dados
   with FNomesMasculinos do
@@ -193,7 +208,85 @@ begin
     Add('São Francisco Saúde'); Add('Prevent Senior'); Add('Mediservice'); Add('Care Plus');
     Add('CASSI'); Add('GEAP Saúde'); Add('Allianz Saúde'); Add('OneHealth');
   end;
-
+  
+  // Preencher lista de instituições de ensino
+  with FInstituicoesEnsino do
+  begin
+    Add('Universidade de São Paulo');
+    Add('Universidade Estadual de Campinas');
+    Add('Universidade Federal do Rio de Janeiro');
+    Add('Universidade Federal de Minas Gerais');
+    Add('Pontifícia Universidade Católica de São Paulo');
+    Add('Universidade de Brasília');
+    Add('Universidade Federal do Rio Grande do Sul');
+    Add('Universidade Estadual Paulista');
+    Add('Universidade Federal da Bahia');
+    Add('Universidade Federal de Pernambuco');
+    Add('Universidade Federal do Paraná');
+    Add('Universidade Federal de Santa Catarina');
+    Add('Universidade Federal do Ceará');
+    Add('Universidade Federal Fluminense');
+    Add('Universidade Federal de São Carlos');
+    Add('Universidade Federal de Goiás');
+    Add('Universidade do Estado do Rio de Janeiro');
+    Add('Universidade Federal do Pará');
+    Add('Universidade Federal da Paraíba');
+    Add('Universidade Federal de Santa Maria');
+    Add('Centro Universitário FEI');
+    Add('Faculdade de Tecnologia de São Paulo');
+    Add('Instituto Federal de Educação, Ciência e Tecnologia');
+    Add('Faculdades Integradas');
+    Add('Fundação Getúlio Vargas');
+  end;
+  
+  // Preencher lista de cursos de graduação
+  with FCursosGraduacao do
+  begin
+    Add('Administração');
+    Add('Direito');
+    Add('Medicina');
+    Add('Engenharia Civil');
+    Add('Psicologia');
+    Add('Ciência da Computação');
+    Add('Odontologia');
+    Add('Enfermagem');
+    Add('Arquitetura e Urbanismo');
+    Add('Engenharia Elétrica');
+    Add('Farmácia');
+    Add('Contabilidade');
+    Add('Pedagogia');
+    Add('Nutrição');
+    Add('Fisioterapia');
+    Add('Publicidade e Propaganda');
+    Add('Sistemas de Informação');
+    Add('Medicina Veterinária');
+    Add('Engenharia de Produção');
+    Add('Jornalismo');
+    Add('Análise e Desenvolvimento de Sistemas');
+    Add('Educação Física');
+    Add('Engenharia Mecânica');
+    Add('Ciências Econômicas');
+    Add('Biomedicina');
+    Add('Design');
+    Add('Agronomia');
+    Add('Relações Internacionais');
+    Add('Química');
+    Add('Física');
+  end;
+  
+  // Preencher lista de áreas de formação
+  with FAreasFormacao do
+  begin
+    Add('Ciências Exatas e da Terra');
+    Add('Ciências Biológicas');
+    Add('Engenharias');
+    Add('Ciências da Saúde');
+    Add('Ciências Agrárias');
+    Add('Ciências Sociais Aplicadas');
+    Add('Ciências Humanas');
+    Add('Linguística, Letras e Artes');
+    Add('Multidisciplinar');
+  end;
 end;
 
 destructor TFakeDataGenerator.Destroy;
@@ -208,7 +301,9 @@ begin
   FMedicamentos.Free;
   FEspecialidades.Free;
   FPlanosSaude.Free;
-
+  FInstituicoesEnsino.Free;
+  FCursosGraduacao.Free;
+  FAreasFormacao.Free;
   inherited;
 end;
 
@@ -1942,6 +2037,151 @@ begin
     Result := Format('%s %s', [Plano, TipoPlano])
   else
     Result := Plano;
+end;
+
+{ Dados Acadêmicos }
+function TFakeDataGenerator.GerarNomeInstituicaoEnsino: string;
+begin
+  Result := FInstituicoesEnsino[Random(FInstituicoesEnsino.Count)];
+end;
+
+function TFakeDataGenerator.GerarCursoGraduacao: string;
+begin
+  Result := FCursosGraduacao[Random(FCursosGraduacao.Count)];
+end;
+
+function TFakeDataGenerator.GerarAreaFormacao: string;
+begin
+  Result := FAreasFormacao[Random(FAreasFormacao.Count)];
+end;
+
+function TFakeDataGenerator.GerarMatriculaAcademica: string;
+var
+  AnoBase: Integer;
+  NumeroSequencial: Integer;
+  Digito: Integer;
+  Matricula: string;
+  Soma: Integer;
+  i: Integer;
+begin
+  // Formato comum: AAANNNNND
+  // AA: ano de ingresso (últimos 2 dígitos)
+  // NNNNN: número sequencial (5 dígitos)
+  // D: dígito verificador
+
+  // Define o ano base (de 5 anos atrás até o ano atual)
+  AnoBase := YearOf(Date) - Random(6);
+  
+  // Gera número sequencial
+  NumeroSequencial := 10000 + Random(90000); // 5 dígitos: 10000 a 99999
+  
+  // Forma a matrícula base
+  Matricula := Copy(IntToStr(AnoBase), 3, 2) + IntToStr(NumeroSequencial);
+  
+  // Calcula dígito verificador (soma ponderada)
+  Soma := 0;
+  for i := 1 to Length(Matricula) do
+    Soma := Soma + StrToInt(Matricula[i]) * i;
+  
+  Digito := Soma mod 10;
+  
+  // Adiciona o dígito verificador
+  Result := Matricula + IntToStr(Digito);
+end;
+
+function TFakeDataGenerator.GerarCoeficienteRendimento: Double;
+var
+  Media, DesvioPadrao: Double;
+  CR: Double;
+begin
+  // A maioria dos alunos tem CR entre 6.0 e 8.5
+  Media := 7.25;
+  DesvioPadrao := 1.0;
+  
+  // Gerar usando distribuição normal
+  repeat
+    // Box-Muller transform para gerar distribuição normal
+    CR := Media + DesvioPadrao * Sqrt(-2 * Ln(Random + 0.000001)) * 
+          Cos(2 * PI * Random);
+  until (CR >= 0) and (CR <= 10);
+  
+  // Arredondar para 2 casas decimais
+  Result := RoundTo(CR, -2);
+end;
+
+function TFakeDataGenerator.GerarDataFormatura(AnoInicio: Integer = 0): TDateTime;
+var
+  AnoBase, MesBase, DiaBase: Word;
+  DuracaoCurso: Integer;
+  DataBase: TDateTime;
+begin
+  // Se não foi informado o ano de início, gera aleatoriamente
+  if AnoInicio = 0 then
+    AnoInicio := YearOf(Date) - Random(10) - 3; // Entre 3 e 12 anos atrás
+  
+  // Duração típica do curso (em anos)
+  case Random(6) of
+    0, 1, 2: DuracaoCurso := 4; // 50% de chance: cursos de 4 anos (maioria)
+    3, 4: DuracaoCurso := 5;    // 33% de chance: cursos de 5 anos (engenharias, etc)
+    5: DuracaoCurso := 6;       // 17% de chance: cursos de 6 anos (medicina, etc)
+  end;
+  
+  // Adiciona uma variação para considerar possíveis atrasos ou adiantamentos
+  if Random(10) < 7 then // 70% chance de ter atraso
+    DuracaoCurso := DuracaoCurso + Random(2); // Adiciona até 1 ano de atraso
+  
+  // Define o ano de formatura
+  AnoBase := AnoInicio + DuracaoCurso;
+  
+  // A maioria das formaturas ocorre em dezembro ou julho
+  if Random(100) < 70 then
+    MesBase := 12 // 70% dezembro
+  else
+    MesBase := 7; // 30% julho
+  
+  // Dia típico de formatura (15 a 30 do mês)
+  DiaBase := 15 + Random(16);
+  
+  // Cria a data completa
+  Result := EncodeDate(AnoBase, MesBase, DiaBase);
+end;
+
+function TFakeDataGenerator.GerarTituloMonografia: string;
+const
+  Inicios: array[0..14] of string = (
+    'Análise de', 'Estudo sobre', 'Uma abordagem sobre', 'Investigação de', 
+    'Perspectivas de', 'Desenvolvimento de', 'O impacto de', 'Avaliação de',
+    'Contribuições para', 'Aspectos de', 'Reflexões sobre', 'Aplicação de',
+    'Metodologia para', 'Os desafios de', 'Tendências em'
+  );
+  
+  Temas: array[0..14] of string = (
+    'sustentabilidade', 'inteligência artificial', 'tecnologias emergentes',
+    'gestão de processos', 'comportamento organizacional', 'saúde pública',
+    'comunicação digital', 'desenvolvimento sustentável', 'políticas públicas',
+    'educação inclusiva', 'metodologias ativas', 'mercado financeiro',
+    'sistemas integrados', 'inovação tecnológica', 'análise de dados'
+  );
+  
+  Contextos: array[0..14] of string = (
+    'no contexto brasileiro', 'em ambientes corporativos', 'na sociedade contemporânea',
+    'no cenário atual', 'em instituições públicas', 'em organizações de saúde',
+    'no setor educacional', 'na indústria 4.0', 'em economias emergentes',
+    'no comércio eletrônico', 'na tomada de decisão', 'em projetos sociais',
+    'nas relações internacionais', 'em pequenas e médias empresas', 'na transformação digital'
+  );
+var
+  Titulo: string;
+begin
+  // Estrutura básica do título: Início + Tema + Contexto
+  // Ex: "Análise de inteligência artificial no cenário atual"
+  Titulo := Inicios[Random(15)] + ' ' + Temas[Random(15)] + ' ' + Contextos[Random(15)];
+  
+  // Em 30% dos casos, adiciona um subtítulo
+  if Random(10) < 3 then
+    Titulo := Titulo + ': um estudo de caso';
+  
+  Result := Titulo;
 end;
 
 end.
