@@ -78,6 +78,16 @@ begin
     memDadosFake.Lines.Add('Placa (Mercosul): '    + FakeData.GerarPlacaVeiculo(True));
 
     memDadosFake.Lines.Add('');
+    memDadosFake.Lines.Add('.:: DADOS DE SAÚDE ::.');
+    memDadosFake.Lines.Add('Tipo Sanguíneo: '      + FakeData.GerarTipoSanguineo);
+    memDadosFake.Lines.Add('Altura: '              + IntToStr(FakeData.GerarAltura) + ' cm');
+    memDadosFake.Lines.Add('Peso: '                + FloatToStr(FakeData.GerarPeso) + ' kg');
+    memDadosFake.Lines.Add('Pressão Arterial: '    + FakeData.GerarPressaoArterial);
+    memDadosFake.Lines.Add('Medicamento: '         + FakeData.GerarMedicamento);
+    memDadosFake.Lines.Add('Especialidade Médica: '+ FakeData.GerarEspecialidadeMedica);
+    memDadosFake.Lines.Add('Plano de Saúde: '      + FakeData.GerarPlanoSaude);
+
+    memDadosFake.Lines.Add('');    
     memDadosFake.Lines.Add('=============================================');
   finally
     FakeData.Free;
