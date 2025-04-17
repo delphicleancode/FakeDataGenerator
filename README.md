@@ -14,11 +14,15 @@ Pode ser utilizado em sistemas CRM, ERP etc.
   - [Dados de Saúde](#-dados-de-saúde)
   - [Dados Acadêmicos](#-dados-acadêmicos)
   - [Dados de Veículos](#-dados-de-veículos)
+  - [Dados de Produtos e E-commerce](#-dados-de-produtos-e-e-commerce)
 - [Instalação](#-instalação)
 - [Como Usar](#-como-usar)
 - [Exemplos](#-exemplos)
   - [Populando Empresas](#--populando-uma-tabela-de-empresas)
   - [Gerando Contas a Receber](#gerando-contas-a-receber)
+  - [Populando Dados de Prontuário](#--populando-dados-de-prontuário-médico)
+  - [Populando Dados de Veículos](#--populando-dados-de-veículos)
+  - [Populando Dados de Produtos](#--populando-dados-de-produtos)
 - [Documentação da API](#-documentação-da-api)
   - [Métodos para Documentos](#métodos-para-documentos)
   - [Métodos para Dados Pessoais](#métodos-para-dados-pessoais)
@@ -28,6 +32,7 @@ Pode ser utilizado em sistemas CRM, ERP etc.
   - [Métodos para Dados de Saúde](#métodos-para-dados-de-saúde)
   - [Métodos para Dados Acadêmicos](#métodos-para-dados-acadêmicos)
   - [Métodos para Dados de Veículos](#métodos-para-dados-de-veículos)
+  - [Métodos para Dados de Produtos e E-commerce](#métodos-para-dados-de-produtos-e-e-commerce)
   - [Métodos Utilitários](#métodos-utilitários)
 - [Contribuindo](#-contribuindo)
 - [Licença](#-licença)
@@ -110,6 +115,23 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - Cores de veículos
 - Tipos de combustível (Flex, Gasolina, Diesel, etc.)
 - Quilometragem proporcional à idade do veículo
+
+[🔝](#-sumário)
+### 🛒 Dados de Produtos e E-commerce
+- Nomes de produtos por categoria
+- Descrições detalhadas de produtos
+- Categorias de produtos
+- Preços com padrões realistas de mercado
+- Descontos promocionais
+- Códigos e identificadores de produtos
+- Especificações físicas (peso e dimensões)
+- Avaliações e comentários de clientes
+- Níveis de estoque
+- Status de pedidos e pagamentos
+- Métodos de pagamento
+- Cupons de desconto
+- Números de pedido
+- IDs de transação financeira
 
 [🔝](#-sumário)
 ## 💻 Instalação 
@@ -324,6 +346,92 @@ begin
       qryVeiculos.ParamByName('KM').AsInteger := FakeData.GerarQuilometragem(AnoFabricacao);
       
       qryVeiculos.ExecSQL;
+    end;
+  finally
+    FakeData.Free;
+  end;
+end;
+```
+
+[🔝](#-sumário)
+## - Populando dados de produtos
+
+```pascal
+procedure PopularProdutos(Quantidade: Integer);
+var
+  FakeData: TFakeDataGenerator;
+  i: Integer;
+  Categoria: string;
+  NomeProduto: string;
+begin
+  FakeData := TFakeDataGenerator.Create;
+  try
+    for i := 1 to Quantidade do
+    begin
+      // Gerar dados básicos do produto
+      Categoria := FakeData.GerarCategoriaProduto;
+      NomeProduto := FakeData.GerarNomeProduto(Categoria);
+      
+      qryProdutos.Close;
+      qryProdutos.SQL.Text := 
+        'INSERT INTO PRODUTOS_ECOMMERCE (CODIGO, NOME, DESCRICAO, CATEGORIA, ' +
+        'PRECO_VENDA, PERCENTUAL_DESCONTO, ESTOQUE_ATUAL, PESO, DIMENSOES) ' +
+        'VALUES (:COD, :NOME, :DESC, :CAT, :PRECO, :DESC_PERC, :ESTOQUE, :PESO, :DIM)';
+      
+      qryProdutos.ParamByName('COD').AsString := FakeData.GerarCodigoProduto;
+      qryProdutos.ParamByName('NOME').AsString := NomeProduto;
+      qryProdutos.ParamByName('DESC').AsString := FakeData.GerarDescricaoProduto(NomeProduto);
+      qryProdutos.ParamByName('CAT').AsString := Categoria;
+      qryProdutos.ParamByName('PRECO').AsFloat := FakeData.GerarPrecoProduto(50, 1500);
+      qryProdutos.ParamByName('DESC_PERC').AsInteger := FakeData.GerarDescontoProduto;
+      qryProdutos.ParamByName('ESTOQUE').AsInteger := FakeData.GerarEstoqueProduto;
+      qryProdutos.ParamByName('PESO').AsInteger := FakeData.GerarPesoProduto;
+      qryProdutos.ParamByName('DIM').AsString := FakeData.GerarDimensoesProduto;
+      
+      qryProdutos.ExecSQL;
+      
+      // Adiciona algumas avaliações para este produto
+      AdicionarAvaliacoesProduto(qryProdutos.LastInsertID, 1 + Random(5));
+    end;
+  finally
+    FakeData.Free;
+  end;
+end;
+
+procedure AdicionarAvaliacoesProduto(IDProduto: Integer; Quantidade: Integer);
+var
+  FakeData: TFakeDataGenerator;
+  i, IDCliente, Avaliacao: Integer;
+  Positivo: Boolean;
+begin
+  FakeData := TFakeDataGenerator.Create;
+  try
+    for i := 1 to Quantidade do
+    begin
+      // Obter cliente aleatório do banco de dados
+      qryClientes.Close;
+      qryClientes.Open;
+      qryClientes.First;
+      qryClientes.MoveBy(Random(qryClientes.RecordCount));
+      IDCliente := qryClientes.FieldByName('ID').AsInteger;
+      
+      // Gerar avaliação com maior tendência a ser positiva (mais realista)
+      Avaliacao := FakeData.GerarAvaliacaoProduto;
+      Positivo := Avaliacao >= 4; // 4 ou 5 estrelas são consideradas positivas
+      
+      qryAvaliacoes.Close;
+      qryAvaliacoes.SQL.Text := 
+        'INSERT INTO AVALIACOES_PRODUTO (ID_PRODUTO, ID_CLIENTE, AVALIACAO, ' +
+        'COMENTARIO, DATA_AVALIACAO) ' +
+        'VALUES (:PROD, :CLI, :AVAL, :COMENT, :DATA)';
+      
+      qryAvaliacoes.ParamByName('PROD').AsInteger := IDProduto;
+      qryAvaliacoes.ParamByName('CLI').AsInteger := IDCliente;
+      qryAvaliacoes.ParamByName('AVAL').AsInteger := Avaliacao;
+      qryAvaliacoes.ParamByName('COMENT').AsString := FakeData.GerarComentarioProduto(Positivo);
+      qryAvaliacoes.ParamByName('DATA').AsDateTime := FakeData.GerarData(IncDay(Date, -30), Date);
+      
+      qryAvaliacoes.ExecSQL;
     end;
   finally
     FakeData.Free;
@@ -566,6 +674,62 @@ function GerarTipoCombustivel: string;
 
 // Gera uma quilometragem plausível baseada na idade do veículo.
 function GerarQuilometragem(AnoVeiculo: Integer): Integer;
+```
+
+[🔝](#-sumário)
+#### Métodos para Dados de Produtos e E-commerce
+
+```pascal
+// Gera um nome de produto baseado na categoria informada. Se a categoria for vazia, escolhe aleatoriamente.
+function GerarNomeProduto(Categoria: string = ''): string;
+
+// Gera uma descrição detalhada para o produto. TamanhoDescricao controla a quantidade de parágrafos.
+function GerarDescricaoProduto(const NomeProduto: string; TamanhoDescricao: Integer = 2): string;
+
+// Gera uma categoria de produto aleatória (Eletrônicos, Moda, Alimentos, etc.).
+function GerarCategoriaProduto: string;
+
+// Gera um preço de produto com distribuição realista, preferencialmente terminando em ,90 ou ,99.
+function GerarPrecoProduto(ValorMinimo: Double = 10.0; ValorMaximo: Double = 2000.0): Double;
+
+// Gera um percentual de desconto comum no varejo (5%, 10%, 15%, 20%, etc.).
+function GerarDescontoProduto(DescontoMaximo: Integer = 50): Integer;
+
+// Gera um código interno de produto no formato XX-NNNNNN.
+function GerarCodigoProduto: string;
+
+// Gera um peso para o produto em gramas.
+function GerarPesoProduto(PesoMinimo: Integer = 100; PesoMaximo: Integer = 10000): Integer;
+
+// Gera dimensões para o produto no formato AxLxP (altura x largura x profundidade).
+function GerarDimensoesProduto: string;
+
+// Gera uma avaliação de produto (1 a 5 estrelas) com distribuição realista.
+function GerarAvaliacaoProduto: Integer;
+
+// Gera um comentário de produto. Se Positivo=True, retorna um comentário elogioso.
+function GerarComentarioProduto(Positivo: Boolean = True): string;
+
+// Gera uma quantidade de estoque para o produto.
+function GerarEstoqueProduto(EstoqueMinimo: Integer = 0; EstoqueMaximo: Integer = 500): Integer;
+
+// Gera um status de pedido (Em Processamento, Enviado, Entregue, Cancelado, etc.).
+function GerarStatusPedido: string;
+
+// Gera um status de pagamento (Pendente, Aprovado, Recusado, Estornado, etc.).
+function GerarStatusPagamento: string;
+
+// Gera um método de pagamento (Cartão de Crédito, Boleto, PIX, etc.).
+function GerarMetodoPagamento: string;
+
+// Gera um código de cupom de desconto promocional.
+function GerarCupomDesconto(Prefixo: string = ''): string;
+
+// Gera um número de pedido no formato comercial (AANNNNNN - ano + sequencial).
+function GerarNumeroPedido: string;
+
+// Gera um ID de transação usado em gateways de pagamento (formato alfanumérico).
+function GerarIDTransacao: string;
 ```
 
 [🔝](#-sumário)

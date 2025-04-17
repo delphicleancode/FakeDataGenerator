@@ -26,6 +26,14 @@ type
     FCoresVeiculos  : TStringList;  
     FCombustiveis   : TStringList;  
 
+    FCategoriasProdutos : TStringList; 
+    FMarcasProdutos     : TStringList;    
+    FAdjetivosProdutos  : TStringList; 
+    FStatusPedido       : TStringList;      
+    FMetodosPagamento   : TStringList;  
+    FStatusPagamento    : TStringList;   
+    FComentariosProdutos: TStringList; 
+    
     function GerarDigitosCPF(const Digits: string): string;
     function GerarDigitosCNPJ(const Digits: string): string;
     function GerarDigitosModulo11(const Digits: string; Peso: Integer): string;
@@ -120,10 +128,28 @@ type
     function GerarCor: string;
     function GerarTipoCombustivel: string;
     function GerarQuilometragem(AnoVeiculo: Integer): Integer;
+
+    { Dados de Produtos e E-commerce }
+    function GerarNomeProduto(Categoria: string = ''): string;
+    function GerarDescricaoProduto(const NomeProduto: string; TamanhoDescricao: Integer = 2): string;
+    function GerarCategoriaProduto: string;
+    function GerarPrecoProduto(ValorMinimo: Double = 10.0; ValorMaximo: Double = 2000.0): Double;
+    function GerarDescontoProduto(DescontoMaximo: Integer = 50): Integer;
+    function GerarCodigoProduto: string;
+    function GerarPesoProduto(PesoMinimo: Integer = 100; PesoMaximo: Integer = 10000): Integer;
+    function GerarDimensoesProduto: string;
+    function GerarAvaliacaoProduto: Integer;
+    function GerarComentarioProduto(Positivo: Boolean = True): string;
+    function GerarEstoqueProduto(EstoqueMinimo: Integer = 0; EstoqueMaximo: Integer = 500): Integer;
+    function GerarStatusPedido: string;
+    function GerarStatusPagamento: string;
+    function GerarMetodoPagamento: string;
+    function GerarCupomDesconto(Prefixo: string = ''): string;
+    function GerarNumeroPedido: string;
+    function GerarIDTransacao: string;    
   end;
 
 implementation
-
 
 constructor TFakeDataGenerator.Create;
 begin
@@ -148,6 +174,14 @@ begin
   FModelosVeiculos := TStringList.Create;
   FCoresVeiculos   := TStringList.Create;
   FCombustiveis    := TStringList.Create;
+
+  FCategoriasProdutos  := TStringList.Create;
+  FMarcasProdutos      := TStringList.Create;
+  FAdjetivosProdutos   := TStringList.Create;
+  FStatusPedido        := TStringList.Create;
+  FMetodosPagamento    := TStringList.Create;
+  FStatusPagamento     := TStringList.Create;
+  FComentariosProdutos := TStringList.Create;  
 
   // Inicializar listas com dados
   with FNomesMasculinos do
@@ -441,6 +475,169 @@ begin
     Add('Gasolina Aditivada');
     Add('Etanol Aditivado');
   end;
+
+  // Preencher categorias de produtos
+  with FCategoriasProdutos do
+  begin
+    Add('Eletrônicos');
+    Add('Informática');
+    Add('Celulares');
+    Add('Eletrodomésticos');
+    Add('Móveis');
+    Add('Decoração');
+    Add('Cama, Mesa e Banho');
+    Add('Moda Masculina');
+    Add('Moda Feminina');
+    Add('Moda Infantil');
+    Add('Calçados');
+    Add('Acessórios');
+    Add('Relógios');
+    Add('Joias e Semijoias');
+    Add('Livros');
+    Add('Games');
+    Add('Brinquedos');
+    Add('Bebês');
+    Add('Beleza e Perfumaria');
+    Add('Saúde');
+    Add('Esportes e Lazer');
+    Add('Ferramentas');
+    Add('Automotivo');
+    Add('Alimentos e Bebidas');
+    Add('Pet Shop');
+  end;
+  
+  // Preencher marcas de produtos
+  with FMarcasProdutos do
+  begin
+    Add('Premium');
+    Add('TechPro');
+    Add('MasterTech');
+    Add('UltraMax');
+    Add('EcoLife');
+    Add('HomeStyle');
+    Add('FashionTrend');
+    Add('SportMax');
+    Add('NaturalCare');
+    Add('KidsFun');
+    Add('GlobalBrands');
+    Add('EasyHome');
+    Add('GourmetChef');
+    Add('LifeQuality');
+    Add('SmartChoice');
+    Add('EcoFriendly');
+    Add('ModernLiving');
+    Add('ClassicDesign');
+    Add('PerfectFit');
+    Add('PurePet');
+  end;
+  
+  // Preencher adjetivos para produtos
+  with FAdjetivosProdutos do
+  begin
+    Add('Profissional');
+    Add('Avançado');
+    Add('Premium');
+    Add('Luxo');
+    Add('Ultra');
+    Add('Slim');
+    Add('Compacto');
+    Add('Elegante');
+    Add('Moderno');
+    Add('Clássico');
+    Add('Resistente');
+    Add('Durável');
+    Add('Econômico');
+    Add('Potente');
+    Add('Portátil');
+    Add('Versátil');
+    Add('Inteligente');
+    Add('Digital');
+    Add('Wireless');
+    Add('Ergonômico');
+  end;
+  
+  // Preencher status de pedido
+  with FStatusPedido do
+  begin
+    Add('Aguardando Pagamento');
+    Add('Pagamento Aprovado');
+    Add('Em Separação');
+    Add('Em Transporte');
+    Add('Entregue');
+    Add('Cancelado');
+    Add('Pagamento Recusado');
+    Add('Devolução Solicitada');
+    Add('Devolução Aprovada');
+    Add('Devolução Concluída');
+    Add('Troca Solicitada');
+    Add('Troca Aprovada');
+    Add('Troca Concluída');
+  end;
+  
+  // Preencher métodos de pagamento
+  with FMetodosPagamento do
+  begin
+    Add('Cartão de Crédito');
+    Add('Cartão de Débito');
+    Add('Boleto Bancário');
+    Add('Transferência Bancária');
+    Add('PIX');
+    Add('PayPal');
+    Add('PicPay');
+    Add('Google Pay');
+    Add('Apple Pay');
+    Add('Samsung Pay');
+    Add('Mercado Pago');
+    Add('Vale-Presente');
+  end;
+  
+  // Preencher status de pagamento
+  with FStatusPagamento do
+  begin
+    Add('Aguardando Pagamento');
+    Add('Pagamento Aprovado');
+    Add('Pagamento Recusado');
+    Add('Pagamento em Análise');
+    Add('Pagamento Cancelado');
+    Add('Pagamento Estornado');
+    Add('Pagamento Parcial');
+    Add('Aguardando Reembolso');
+    Add('Reembolso Realizado');
+  end;
+  
+  // Preencher comentários de produtos
+  with FComentariosProdutos do
+  begin
+    // Comentários positivos
+    Add('Excelente produto, superou minhas expectativas!');
+    Add('Ótimo custo-benefício, recomendo.');
+    Add('Chegou antes do prazo e em perfeitas condições.');
+    Add('Produto de qualidade, acabamento perfeito.');
+    Add('Atendeu perfeitamente às minhas necessidades.');
+    Add('Estou muito satisfeito com a compra.');
+    Add('Funciona muito bem, fácil de usar.');
+    Add('Design moderno e qualidade impecável.');
+    Add('Um dos melhores produtos que já comprei.');
+    Add('Entrega rápida e produto conforme descrição.');
+    Add('Durável e resistente, vale cada centavo.');
+    Add('Comprei para presentear e a pessoa adorou!');
+    Add('Funcionalidades além do esperado. Recomendo!');
+    Add('Já é minha terceira compra deste produto. Perfeito!');
+    
+    // Comentários negativos
+    Add('Não atendeu minhas expectativas, qualidade inferior.');
+    Add('Produto chegou com defeito, terei que devolver.');
+    Add('Não funciona como deveria, estou decepcionado.');
+    Add('Tamanho não corresponde ao anunciado.');
+    Add('Material frágil, quebrou no primeiro uso.');
+    Add('Demorou muito para entregar e veio com avarias.');
+    Add('Cor muito diferente da foto do anúncio.');
+    Add('Produto não vale o preço cobrado.');
+    Add('Difícil de usar, manual não explica corretamente.');
+    Add('Acabamento deixa a desejar para o valor pago.');
+    Add('Já apresentou defeito com poucos dias de uso.');
+    Add('Assistência técnica não resolveu meu problema.');
+  end;  
 end;
 
 destructor TFakeDataGenerator.Destroy;
@@ -462,6 +659,13 @@ begin
   FModelosVeiculos.Free;
   FCoresVeiculos.Free;
   FCombustiveis.Free;
+  FCategoriasProdutos.Free;
+  FMarcasProdutos.Free;
+  FAdjetivosProdutos.Free;
+  FStatusPedido.Free;
+  FMetodosPagamento.Free;
+  FStatusPagamento.Free;
+  FComentariosProdutos.Free;  
   inherited;
 end;
 
@@ -2495,5 +2699,415 @@ begin
   if Result < 0 then
     Result := Random(1000); // Veículo novo com poucos km
 end;
+
+function TFakeDataGenerator.GerarNomeProduto(Categoria: string = ''): string;
+var
+  Marca, Adjetivo: string;
+  Sufixos: array[0..9] of string;
+  NomeBase: string;
+begin
+  Marca := FMarcasProdutos[Random(FMarcasProdutos.Count)];
+  Adjetivo := FAdjetivosProdutos[Random(FAdjetivosProdutos.Count)];
+  
+  // Sufixos diversos para produtos
+  Sufixos[0] := 'Pro';
+  Sufixos[1] := 'Plus';
+  Sufixos[2] := 'Max';
+  Sufixos[3] := 'Ultra';
+  Sufixos[4] := 'Lite';
+  Sufixos[5] := '';
+  Sufixos[6] := 'Smart';
+  Sufixos[7] := 'Premium';
+  Sufixos[8] := IntToStr(1000 + Random(9000)); // Número de 1000 a 9999
+  Sufixos[9] := Chr(65 + Random(26)); // Letra de A a Z
+  
+  // Se não tiver categoria, gera uma aleatória
+  if Categoria = '' then
+    Categoria := FCategoriasProdutos[Random(FCategoriasProdutos.Count)];
+  
+  // Gera estrutura base do nome do produto baseado na categoria
+  if Categoria = 'Eletrônicos' then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if Categoria = 'Informática' then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if Categoria = 'Celulares' then
+    NomeBase := Marca + ' ' + 'Smartphone ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if Categoria = 'Eletrodomésticos' then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if (Categoria = 'Móveis') or (Categoria = 'Decoração') then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if (Categoria = 'Moda Masculina') or (Categoria = 'Moda Feminina') or (Categoria = 'Moda Infantil') then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if Categoria = 'Calçados' then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else if Categoria = 'Livros' then
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)]
+  else
+    NomeBase := Marca + ' ' + Adjetivo + ' ' + Sufixos[Random(10)];
+  
+  Result := NomeBase;
+end;
+
+function TFakeDataGenerator.GerarDescricaoProduto(const NomeProduto: string; TamanhoDescricao: Integer = 2): string;
+var
+  Descricao: TStringList;
+  Caracteristicas: array[0..19] of string;
+  Beneficios: array[0..14] of string;
+  Garantias: array[0..4] of string;
+  i, NumParagrafos: Integer;
+begin
+  // Características genéricas para produtos
+  Caracteristicas[0] := 'Fabricado com materiais de alta qualidade';
+  Caracteristicas[1] := 'Design moderno e elegante';
+  Caracteristicas[2] := 'Leve e compacto';
+  Caracteristicas[3] := 'Fácil de usar e configurar';
+  Caracteristicas[4] := 'Resistente a impactos e arranhões';
+  Caracteristicas[5] := 'Disponível em várias cores';
+  Caracteristicas[6] := 'Tecnologia de ponta';
+  Caracteristicas[7] := 'Alta performance';
+  Caracteristicas[8] := 'Econômico e sustentável';
+  Caracteristicas[9] := 'Acabamento premium';
+  Caracteristicas[10] := 'Bateria de longa duração';
+  Caracteristicas[11] := 'Conectividade avançada';
+  Caracteristicas[12] := 'Compatível com diversos dispositivos';
+  Caracteristicas[13] := 'Interface intuitiva';
+  Caracteristicas[14] := 'Múltiplas funções em um único produto';
+  Caracteristicas[15] := 'Tecnologia de última geração';
+  Caracteristicas[16] := 'Controle preciso e eficiente';
+  Caracteristicas[17] := 'Sensor de alta precisão';
+  Caracteristicas[18] := 'Processamento rápido';
+  Caracteristicas[19] := 'Armazenamento amplo';
+  
+  // Benefícios genéricos
+  Beneficios[0] := 'Proporciona maior conforto e praticidade';
+  Beneficios[1] := 'Economiza tempo e esforço';
+  Beneficios[2] := 'Melhora a produtividade';
+  Beneficios[3] := 'Ideal para uso doméstico ou profissional';
+  Beneficios[4] := 'Oferece melhor custo-benefício do mercado';
+  Beneficios[5] := 'Traz mais segurança e tranquilidade';
+  Beneficios[6] := 'Ajuda a economizar energia';
+  Beneficios[7] := 'Prolonga a vida útil de seus equipamentos';
+  Beneficios[8] := 'Reduz custos a longo prazo';
+  Beneficios[9] := 'Melhora a experiência do usuário';
+  Beneficios[10] := 'Protege contra danos e desgastes prematuros';
+  Beneficios[11] := 'Aumenta a eficiência no dia a dia';
+  Beneficios[12] := 'Contribui para a organização do ambiente';
+  Beneficios[13] := 'Garante resultados profissionais';
+  Beneficios[14] := 'Adapta-se a diferentes necessidades';
+  
+  // Informações de garantia
+  Garantias[0] := 'Garantia de 12 meses do fabricante';
+  Garantias[1] := 'Garantia de 6 meses contra defeitos de fabricação';
+  Garantias[2] := 'Garantia estendida disponível';
+  Garantias[3] := 'Produto com certificação de qualidade';
+  Garantias[4] := 'Atendimento ao cliente 24 horas';
+  
+  // Cria a descrição do produto
+  Descricao := TStringList.Create;
+  try
+    // Primeiro parágrafo - Introdução
+    Descricao.Add(Format('O %s é a escolha perfeita para quem busca qualidade e inovação. %s e %s.',
+      [NomeProduto, Caracteristicas[Random(20)], Caracteristicas[Random(20)]]));
+    
+    // Características do produto
+    Descricao.Add('');
+    Descricao.Add('CARACTERÍSTICAS PRINCIPAIS:');
+    for i := 1 to 3 + Random(3) do // 3 a 5 características
+      Descricao.Add('- ' + Caracteristicas[Random(20)]);
+    
+    // Benefícios
+    Descricao.Add('');
+    Descricao.Add('BENEFÍCIOS:');
+    for i := 1 to 2 + Random(3) do // 2 a 4 benefícios
+      Descricao.Add('- ' + Beneficios[Random(15)]);
+    
+    // Adiciona informações de garantia
+    Descricao.Add('');
+    Descricao.Add('INFORMAÇÕES ADICIONAIS:');
+    Descricao.Add('- ' + Garantias[Random(5)]);
+    Descricao.Add('- Produto original com nota fiscal');
+    
+    // Conclusão
+    Descricao.Add('');
+    Descricao.Add(Format('Não perca a oportunidade de adquirir o %s e elevar sua experiência ao próximo nível!', [NomeProduto]));
+    
+    // Limita o tamanho da descrição conforme solicitado
+    if TamanhoDescricao < 5 then
+    begin
+      NumParagrafos := TamanhoDescricao;
+      while Descricao.Count > NumParagrafos * 3 do
+        Descricao.Delete(Descricao.Count - 1);
+    end;
+    
+    Result := Descricao.Text;
+  finally
+    Descricao.Free;
+  end;
+end;
+
+function TFakeDataGenerator.GerarCategoriaProduto: string;
+begin
+  Result := FCategoriasProdutos[Random(FCategoriasProdutos.Count)];
+end;
+
+function TFakeDataGenerator.GerarPrecoProduto(ValorMinimo: Double = 10.0; ValorMaximo: Double = 2000.0): Double;
+var
+  PrecosComuns: array[0..9] of Double;
+  UsarPrecoComum: Boolean;
+begin
+  // Preços comuns que são mais frequentes no mercado
+  PrecosComuns[0] := 19.90;
+  PrecosComuns[1] := 29.90;
+  PrecosComuns[2] := 49.90;
+  PrecosComuns[3] := 99.90;
+  PrecosComuns[4] := 149.90;
+  PrecosComuns[5] := 199.90;
+  PrecosComuns[6] := 299.90;
+  PrecosComuns[7] := 399.90;
+  PrecosComuns[8] := 499.90;
+  PrecosComuns[9] := 999.90;
+  
+  // 40% de chance de usar um preço comum
+  UsarPrecoComum := Random(100) < 40;
+  
+  if UsarPrecoComum and (ValorMinimo <= PrecosComuns[0]) and (ValorMaximo >= PrecosComuns[9]) then
+    Result := PrecosComuns[Random(10)]
+  else
+  begin
+    // Gera um preço aleatório dentro do intervalo
+    Result := ValorMinimo + Random * (ValorMaximo - ValorMinimo);
+    
+    // Arredonda para o formato XX,90 (muito comum em preços de varejo)
+    if Random(100) < 70 then // 70% de chance
+      Result := Trunc(Result) - 0.10 + 0.99;
+    
+    // Arredonda para 2 casas decimais
+    Result := RoundTo(Result, -2);
+  end;
+end;
+
+function TFakeDataGenerator.GerarDescontoProduto(DescontoMaximo: Integer = 50): Integer;
+var
+  DescontosComuns: array[0..5] of Integer;
+  UsarDescontoComum: Boolean;
+  Desconto: Integer;
+begin
+  // Descontos comuns no varejo
+  DescontosComuns[0] := 5;
+  DescontosComuns[1] := 10;
+  DescontosComuns[2] := 15;
+  DescontosComuns[3] := 20;
+  DescontosComuns[4] := 30;
+  DescontosComuns[5] := 50;
+  
+  // 60% de chance de usar um desconto comum
+  UsarDescontoComum := Random(100) < 60;
+  
+  if UsarDescontoComum then
+  begin
+    // Encontra o maior desconto comum que é menor ou igual ao máximo permitido
+    for Desconto := High(DescontosComuns) downto Low(DescontosComuns) do
+      if DescontosComuns[Result] <= DescontoMaximo then
+        Exit(DescontosComuns[Desconto]);
+  end;
+  
+  // Caso contrário, gera um desconto aleatório múltiplo de 5 (5%, 10%, 15%...)
+  Result := (Random(DescontoMaximo div 5) + 1) * 5;
+  if Result > DescontoMaximo then
+    Result := DescontoMaximo;
+end;
+
+function TFakeDataGenerator.GerarCodigoProduto: string;
+var
+  Prefixo: string;
+  Numero: Integer;
+begin
+  // Gera um prefixo de 2 a 3 letras
+  Prefixo := '';
+  for var i := 1 to 2 + Random(2) do
+    Prefixo := Prefixo + Chr(65 + Random(26));
+  
+  // Gera um número de 4 a 6 dígitos
+  Numero := 1000 + Random(999000);
+  
+  // Formata o código
+  Result := Prefixo + '-' + IntToStr(Numero);
+end;
+
+function TFakeDataGenerator.GerarPesoProduto(PesoMinimo: Integer = 100; PesoMaximo: Integer = 10000): Integer;
+begin
+  // Peso em gramas
+  Result := PesoMinimo + Random(PesoMaximo - PesoMinimo + 1);
+  
+  // Arredonda para múltiplos de 10g para produtos leves, 100g para produtos médios e 1000g para produtos pesados
+  if Result < 1000 then
+    Result := (Result div 10) * 10
+  else if Result < 5000 then
+    Result := (Result div 100) * 100
+  else
+    Result := (Result div 1000) * 1000;
+end;
+
+function TFakeDataGenerator.GerarDimensoesProduto: string;
+var
+  Altura, Largura, Profundidade: Integer;
+begin
+  // Dimensões em centímetros com limites realistas
+  Altura := 2 + Random(99);      // 2cm a 100cm
+  Largura := 2 + Random(99);     // 2cm a 100cm
+  Profundidade := 2 + Random(99); // 2cm a 100cm
+  
+  // Formata as dimensões (AxLxP)
+  Result := Format('%d x %d x %d cm', [Altura, Largura, Profundidade]);
+end;
+
+function TFakeDataGenerator.GerarAvaliacaoProduto: Integer;
+var
+  Avaliacoes: array[0..4] of Integer;
+begin
+  // Distribuição de probabilidade para avaliações:
+  // 5 estrelas - 45%
+  // 4 estrelas - 30%
+  // 3 estrelas - 15%
+  // 2 estrelas - 7%
+  // 1 estrela  - 3%
+  Avaliacoes[0] := 45; // 5 estrelas
+  Avaliacoes[1] := 30; // 4 estrelas
+  Avaliacoes[2] := 15; // 3 estrelas
+  Avaliacoes[3] := 7;  // 2 estrelas
+  Avaliacoes[4] := 3;  // 1 estrela
+  
+  var Sorteio := Random(100) + 1;
+  var Acumulado := 0;
+  
+  for var i := 0 to 4 do
+  begin
+    Acumulado := Acumulado + Avaliacoes[i];
+    if Sorteio <= Acumulado then
+      Exit(5 - i);
+  end;
+  
+  Result := 5; // Padrão caso algo dê errado
+end;
+
+function TFakeDataGenerator.GerarComentarioProduto(Positivo: Boolean = True): string;
+var
+  ComentariosPositivos, ComentariosNegativos: TStringList;
+  i: Integer;
+begin
+  ComentariosPositivos := TStringList.Create;
+  ComentariosNegativos := TStringList.Create;
+  try
+    // Separa os comentários em positivos e negativos
+    for i := 0 to FComentariosProdutos.Count - 1 do
+    begin
+      if i < 14 then // Os primeiros 14 são positivos
+        ComentariosPositivos.Add(FComentariosProdutos[i])
+      else
+        ComentariosNegativos.Add(FComentariosProdutos[i]);
+    end;
+    
+    // Retorna um comentário aleatório conforme solicitado
+    if Positivo then
+      Result := ComentariosPositivos[Random(ComentariosPositivos.Count)]
+    else
+      Result := ComentariosNegativos[Random(ComentariosNegativos.Count)];
+  finally
+    ComentariosPositivos.Free;
+    ComentariosNegativos.Free;
+  end;
+end;
+
+function TFakeDataGenerator.GerarEstoqueProduto(EstoqueMinimo: Integer = 0; EstoqueMaximo: Integer = 500): Integer;
+begin
+  Result := EstoqueMinimo + Random(EstoqueMaximo - EstoqueMinimo + 1);
+  
+  // Itens populares tendem a ter estoques maiores
+  if Random(100) < 20 then // 20% de chance para produtos populares
+    Result := Result * 2;
+    
+  // Possibilidade de produtos esgotados
+  if (EstoqueMinimo = 0) and (Random(100) < 5) then // 5% de chance
+    Result := 0;
+end;
+
+function TFakeDataGenerator.GerarStatusPedido: string;
+begin
+  Result := FStatusPedido[Random(FStatusPedido.Count)];
+end;
+
+function TFakeDataGenerator.GerarStatusPagamento: string;
+begin
+  Result := FStatusPagamento[Random(FStatusPagamento.Count)];
+end;
+
+function TFakeDataGenerator.GerarMetodoPagamento: string;
+begin
+  Result := FMetodosPagamento[Random(FMetodosPagamento.Count)];
+end;
+
+function TFakeDataGenerator.GerarCupomDesconto(Prefixo: string = ''): string;
+var
+  Codigos: array[0..4] of string;
+  Codigo: string;
+begin
+  Codigos[0] := 'PROMO';
+  Codigos[1] := 'DESC';
+  Codigos[2] := 'SALE';
+  Codigos[3] := 'SAVE';
+  Codigos[4] := 'OFFER';
+  
+  // Se não for especificado um prefixo, escolhe aleatoriamente
+  if Prefixo = '' then
+    Prefixo := Codigos[Random(5)];
+  
+  // Gera um código alfanumérico de 4 a 6 caracteres
+  Codigo := '';
+  for var i := 1 to 4 + Random(3) do
+  begin
+    case Random(3) of
+      0: Codigo := Codigo + Chr(65 + Random(26)); // Letra maiúscula
+      1: Codigo := Codigo + Chr(48 + Random(10)); // Número
+      2: Codigo := Codigo + Chr(65 + Random(26)); // Letra maiúscula
+    end;
+  end;
+  
+  // Formata o cupom
+  Result := UpperCase(Prefixo) + Codigo;
+end;
+
+function TFakeDataGenerator.GerarNumeroPedido: string;
+var
+  Ano, NumSequencial: string;
+begin
+  // Formato comum de número de pedido: ANO + Sequencial
+  Ano := Copy(IntToStr(YearOf(Date)), 3, 2); // Últimos 2 dígitos do ano
+  NumSequencial := Format('%.6d', [Random(1000000)]); // 6 dígitos
+  
+  Result := Ano + NumSequencial;
+end;
+
+function TFakeDataGenerator.GerarIDTransacao: string;
+var
+  Caracteres: string;
+  ID: string;
+begin
+  Caracteres := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  ID := '';
+  
+  // Gera um ID de transação alfanumérico único (comum em sistemas de pagamento)
+  // Formato: 4 grupos de 4 caracteres separados por hífen
+  for var i := 1 to 4 do
+  begin
+    for var j := 1 to 4 do
+      ID := ID + Caracteres[Random(Length(Caracteres)) + 1];
+      
+    if i < 4 then
+      ID := ID + '-';
+  end;
+  
+  Result := ID;
+end;
+
 
 end.
