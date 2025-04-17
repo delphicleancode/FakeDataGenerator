@@ -56,6 +56,15 @@ Esta biblioteca oferece métodos para gerar diversos tipos de dados fictícios, 
 - Valores monetários
 - Códigos de documentos comerciais
 
+### 🏥 Dados de Saúde
+- Tipo sanguíneo (A+, A-, B+, B-, AB+, AB-, O+, O-)
+- Altura (em centímetros)
+- Peso (em quilogramas)
+- Pressão arterial
+- Medicamentos
+- Especialidades médicas
+- Planos de saúde
+
 ## 💻 Instalação
 
 1. Faça o download dos arquivos fonte ou clone este repositório
@@ -80,9 +89,9 @@ begin
   FakeData := TFakeDataGenerator.Create;
   try
     // Gere e utilize os dados fictícios
-    ShowMessage('\''CPF: '\'' + FakeData.GerarCPF);
-    ShowMessage('\''Nome: '\'' + FakeData.GerarNomeCompleto);
-    ShowMessage('\''Email: '\'' + FakeData.GerarEmail(FakeData.GerarNomeCompleto));
+    ShowMessage('CPF: ' + FakeData.GerarCPF);
+    ShowMessage('Nome: ' + FakeData.GerarNomeCompleto);
+    ShowMessage('Email: ' + FakeData.GerarEmail(FakeData.GerarNomeCompleto));
   finally
     // Libere os recursos
     FakeData.Free;
@@ -108,21 +117,21 @@ begin
       RazaoSocial := FakeData.GerarRazaoSocial;
       
       qryEmpresas.Close;
-      qryEmpresas.SQL.Text := '\''INSERT INTO EMPRESAS (RAZAO_SOCIAL, NOME_FANTASIA, CNPJ, '\'' +
-                              '\''TELEFONE, EMAIL, ENDERECO, CIDADE, UF, CEP) '\'' +
-                              '\''VALUES (:RAZAO, :FANTASIA, :CNPJ, :TEL, :EMAIL, '\'' + 
-                              '\'':END, :CID, :UF, :CEP)'\'';
+      qryEmpresas.SQL.Text := 'INSERT INTO EMPRESAS (RAZAO_SOCIAL, NOME_FANTASIA, CNPJ, ' +
+                              'TELEFONE, EMAIL, ENDERECO, CIDADE, UF, CEP) ' +
+                              'VALUES (:RAZAO, :FANTASIA, :CNPJ, :TEL, :EMAIL, ' + 
+                              ':END, :CID, :UF, :CEP)';
       
-      qryEmpresas.ParamByName('\''RAZAO'\'').AsString := RazaoSocial;
-      qryEmpresas.ParamByName('\''FANTASIA'\'').AsString := FakeData.GerarNomeFantasia(RazaoSocial);
-      qryEmpresas.ParamByName('\''CNPJ'\'').AsString := FakeData.GerarCNPJ;
-      qryEmpresas.ParamByName('\''TEL'\'').AsString := FakeData.GerarTelefone;
-      qryEmpresas.ParamByName('\''EMAIL'\'').AsString := FakeData.GerarEmail(RazaoSocial);
-      qryEmpresas.ParamByName('\''END'\'').AsString := 
-        FakeData.GerarLogradouro + '\'', '\'' + FakeData.GerarNumero;
-      qryEmpresas.ParamByName('\''CID'\'').AsString := FakeData.GerarCidade;
-      qryEmpresas.ParamByName('\''UF'\'').AsString := FakeData.GerarUF;
-      qryEmpresas.ParamByName('\''CEP'\'').AsString := FakeData.GerarCEP;
+      qryEmpresas.ParamByName('RAZAO').AsString := RazaoSocial;
+      qryEmpresas.ParamByName('FANTASIA').AsString := FakeData.GerarNomeFantasia(RazaoSocial);
+      qryEmpresas.ParamByName('CNPJ').AsString := FakeData.GerarCNPJ;
+      qryEmpresas.ParamByName('TEL').AsString := FakeData.GerarTelefone;
+      qryEmpresas.ParamByName('EMAIL').AsString := FakeData.GerarEmail(RazaoSocial);
+      qryEmpresas.ParamByName('END').AsString := 
+        FakeData.GerarLogradouro + ', ' + FakeData.GerarNumero;
+      qryEmpresas.ParamByName('CID').AsString := FakeData.GerarCidade;
+      qryEmpresas.ParamByName('UF').AsString := FakeData.GerarUF;
+      qryEmpresas.ParamByName('CEP').AsString := FakeData.GerarCEP;
       
       qryEmpresas.ExecSQL;
     end;
@@ -151,18 +160,18 @@ begin
       
       qryContasReceber.Close;
       qryContasReceber.SQL.Text := 
-        '\''INSERT INTO CONTAS_RECEBER (ID_EMPRESA, ID_PESSOA, DOCUMENTO, '\'' +
-        '\''EMISSAO, VENCIMENTO, VALOR, DESCRICAO, SITUACAO) '\'' +
-        '\''VALUES (:EMPRESA, :PESSOA, :DOC, :EMISSAO, :VENC, :VALOR, :DESC, :SIT)'\'';
+        'INSERT INTO CONTAS_RECEBER (ID_EMPRESA, ID_PESSOA, DOCUMENTO, ' +
+        'EMISSAO, VENCIMENTO, VALOR, DESCRICAO, SITUACAO) ' +
+        'VALUES (:EMPRESA, :PESSOA, :DOC, :EMISSAO, :VENC, :VALOR, :DESC, :SIT)';
       
-      qryContasReceber.ParamByName('\''EMPRESA'\'').AsInteger := IDEmpresa;
-      qryContasReceber.ParamByName('\''PESSOA'\'').AsInteger := IDPessoa;
-      qryContasReceber.ParamByName('\''DOC'\'').AsString := FakeData.GerarDocumento;
-      qryContasReceber.ParamByName('\''EMISSAO'\'').AsDate := Date;
-      qryContasReceber.ParamByName('\''VENC'\'').AsDate := DataVencimento;
-      qryContasReceber.ParamByName('\''VALOR'\'').AsFloat := FakeData.GerarValor(100, 5000);
-      qryContasReceber.ParamByName('\''DESC'\'').AsString := '\''Venda de mercadorias'\'';
-      qryContasReceber.ParamByName('\''SIT'\'').AsString := '\''P'\''; // Pendente
+      qryContasReceber.ParamByName('EMPRESA').AsInteger := IDEmpresa;
+      qryContasReceber.ParamByName('PESSOA').AsInteger := IDPessoa;
+      qryContasReceber.ParamByName('DOC').AsString := FakeData.GerarDocumento;
+      qryContasReceber.ParamByName('EMISSAO').AsDate := Date;
+      qryContasReceber.ParamByName('VENC').AsDate := DataVencimento;
+      qryContasReceber.ParamByName('VALOR').AsFloat := FakeData.GerarValor(100, 5000);
+      qryContasReceber.ParamByName('DESC').AsString := 'Venda de mercadorias';
+      qryContasReceber.ParamByName('SIT').AsString := 'P'; // Pendente
       
       qryContasReceber.ExecSQL;
     end;
@@ -172,6 +181,48 @@ begin
 end;
 
 ```
+
+- Populando dados de prontuário médico
+
+```pascal
+procedure PopularProntuarios(Quantidade: Integer);
+var
+  FakeData: TFakeDataGenerator;
+  i: Integer;
+  IDPessoa: Integer;
+begin
+  FakeData := TFakeDataGenerator.Create;
+  try
+    for i := 1 to Quantidade do
+    begin
+      // Obter pessoa aleatória do banco de dados
+      qryPessoas.Close;
+      qryPessoas.Open;
+      qryPessoas.First;
+      qryPessoas.MoveBy(Random(qryPessoas.RecordCount));
+      IDPessoa := qryPessoas.FieldByName('ID').AsInteger;
+      
+      qryProntuarios.Close;
+      qryProntuarios.SQL.Text := 
+        'INSERT INTO PRONTUARIOS (ID_PESSOA, TIPO_SANGUINEO, ALTURA, ' +
+        'PESO, PRESSAO_ARTERIAL, ULTIMA_ATUALIZACAO) ' +
+        'VALUES (:PESSOA, :TIPO_SANG, :ALTURA, :PESO, :PRESSAO, :DATA)';
+      
+      qryProntuarios.ParamByName('PESSOA').AsInteger := IDPessoa;
+      qryProntuarios.ParamByName('TIPO_SANG').AsString := FakeData.GerarTipoSanguineo;
+      qryProntuarios.ParamByName('ALTURA').AsInteger := FakeData.GerarAltura;
+      qryProntuarios.ParamByName('PESO').AsFloat := FakeData.GerarPeso;
+      qryProntuarios.ParamByName('PRESSAO').AsString := FakeData.GerarPressaoArterial;
+      qryProntuarios.ParamByName('DATA').AsDateTime := Now;
+      
+      qryProntuarios.ExecSQL;
+    end;
+  finally
+    FakeData.Free;
+  end;
+end;
+```
+
 ## 📖 Documentação da API
 
 ### TFakeDataGenerator
@@ -224,6 +275,21 @@ function GerarCelular(Formatado: Boolean = True): string;
 
 // Gera um endereço de e-mail baseado no nome fornecido.
 function GerarEmail(const Nome: string): string;
+
+// Gera uma data de nascimento com idade entre IdadeMinima e IdadeMaxima.
+function GerarDataNascimento(IdadeMinima: Integer = 18; IdadeMaxima: Integer = 80): TDateTime;
+
+// Gera um perfil de rede social com base no nome.
+function GerarPerfilRedeSocial(const Nome: string; RedeSocial: string = 'instagram'): string;
+
+// Gera um estado civil aleatório.
+function GerarEstadoCivil: string;
+
+// Gera uma profissão aleatória.
+function GerarProfissao: string;
+
+// Gera um nível de escolaridade aleatório.
+function GerarEscolaridade: string;
 ```
 
 #### Métodos para Dados Empresariais e Financeiros
@@ -243,6 +309,21 @@ function GerarCartaoCredito(Bandeira: string = ''): string;
 
 // Gera dados de conta bancária. Banco pode ser especificado ou deixado em branco para seleção aleatória.
 function GerarContaBancaria(Banco: string = ''; Formatado: Boolean = True): string;
+
+// Gera um código CNAE para atividade empresarial.
+function GerarCNAE(Formatado: Boolean = True): string;
+
+// Gera um número de inscrição municipal.
+function GerarInscricaoMunicipal(Municipio: string = ''): string;
+
+// Gera um nome de departamento empresarial.
+function GerarDepartamento: string;
+
+// Gera um cargo profissional.
+function GerarCargo: string;
+
+// Gera uma chave PIX de acordo com o tipo especificado.
+function GerarChavePIX(TipoChave: string = 'aleatoria'): string;
 ```
 
 #### Métodos para Endereços
@@ -278,6 +359,46 @@ function GerarData(DataInicial, DataFinal: TDateTime): TDateTime;
 
 // Gera um valor aleatório entre ValorMinimo e ValorMaximo.
 function GerarValor(ValorMinimo, ValorMaximo: Double): Double;
+
+// Gera um código de barras para boleto.
+function GerarCodigoBarrasBoleto(Banco: string = ''): string;
+
+// Gera uma linha digitável para boleto.
+function GerarLinhaDigitavelBoleto(Banco: string = ''): string;
+
+// Gera um código de rastreio para encomendas.
+function GerarCodigoRastreio: string;
+
+// Gera uma alíquota de imposto do tipo especificado.
+function GerarAliquotaImposto(TipoImposto: string = 'ICMS'): Double;
+
+// Gera um número de nota fiscal.
+function GerarNotaFiscal(UF: string = ''): string;
+```
+
+#### Métodos para Dados de Saúde
+
+```pascal
+// Gera um tipo sanguíneo (A+, A-, B+, B-, AB+, AB-, O+, O-).
+function GerarTipoSanguineo: string;
+
+// Gera uma altura em centímetros entre Min e Max.
+function GerarAltura(Min: Integer = 150; Max: Integer = 200): Integer;
+
+// Gera um peso em quilogramas entre Min e Max.
+function GerarPeso(Min: Integer = 50; Max: Integer = 120): Double;
+
+// Gera uma pressão arterial no formato "120/80 mmHg".
+function GerarPressaoArterial: string;
+
+// Gera um nome de medicamento comum.
+function GerarMedicamento: string;
+
+// Gera uma especialidade médica.
+function GerarEspecialidadeMedica: string;
+
+// Gera um nome de plano de saúde.
+function GerarPlanoSaude: string;
 ```
 
 #### Métodos Utilitários
@@ -302,7 +423,7 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar
 
 Faça um fork deste repositório
 Crie uma branch para sua feature (git checkout -b feature/nova-funcionalidade)
-Faça commit das suas alterações (git commit -m '\''Adiciona nova funcionalidade'\'')
+Faça commit das suas alterações (git commit -m 'Adiciona nova funcionalidade')
 Faça push para a branch (git push origin feature/nova-funcionalidade)
 Abra um Pull Request
 
