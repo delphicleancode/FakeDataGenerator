@@ -31,10 +31,10 @@ var
   FakeData: TFakeDataGenerator;
   RazaoSocial: string;
 begin
+  FakeData := TFakeDataGenerator.Create;
   try
     memDadosFake.Clear;
     Randomize;
-    FakeData := TFakeDataGenerator.Create;
     memDadosFake.Lines.Add('=============================================');
 
     memDadosFake.Lines.Add('');

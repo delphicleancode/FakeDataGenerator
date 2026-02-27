@@ -14,7 +14,7 @@ object Form6: TForm6
   object lblTitulo: TLabel
     Left = 249
     Top = 8
-    Width = 417
+    Width = 388
     Height = 28
     Caption = 'Gerador de Dados Fict'#237'cios para sistemas'
     Font.Charset = DEFAULT_CHARSET
