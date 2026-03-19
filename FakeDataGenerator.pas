@@ -37,7 +37,7 @@ type
     function GerarDigitosCPF(const Digits: string): string;
     function GerarDigitosCNPJ(const Digits: string): string;
     function GerarDigitosModulo11(const Digits: string; Peso: Integer): string;
-    function ApenasNumeros(const Str: string): string;
+//    function ApenasNumeros(const Str: string): string;
   public
     constructor Create;
     destructor Destroy; override;
@@ -669,15 +669,15 @@ begin
   inherited;
 end;
 
-function TFakeDataGenerator.ApenasNumeros(const Str: string): string;
-var
-  i: Integer;
-begin
-  Result := '';
-  for i := 1 to Length(Str) do
-    if CharInSet(Str[i], ['0'..'9']) then
-      Result := Result + Str[i];
-end;
+//function TFakeDataGenerator.ApenasNumeros(const Str: string): string;
+//var
+//  i: Integer;
+//begin
+//  Result := '';
+//  for i := 1 to Length(Str) do
+//    if CharInSet(Str[i], ['0'..'9']) then
+//      Result := Result + Str[i];
+//end;
 
 function TFakeDataGenerator.GerarDigitosModulo11(const Digits: string; Peso: Integer): string;
 var
@@ -717,7 +717,7 @@ end;
 function TFakeDataGenerator.GerarDigitosCNPJ(const Digits: string): string;
 var
   Digit1, Digit2: string;
-  i, Sum, Weight, Remainder, Digit: Integer;
+  i, Sum, Weight, Remainder: Integer;
 begin
   // Primeiro dígito
   Sum := 0;
@@ -1000,8 +1000,7 @@ end;
 function TFakeDataGenerator.GerarEmail(const Nome: string): string;
 var
   Dominios: array[0..4] of string;
-  NomeSemAcentos, Parte1, Parte2: string;
-  i: Integer;
+  NomeSemAcentos: string;
 begin
   Dominios[0] := 'gmail.com';
   Dominios[1] := 'hotmail.com';
@@ -1264,7 +1263,7 @@ end;
 function TFakeDataGenerator.GerarContaBancaria(Banco: string = ''; Formatado: Boolean = True): string;
 var
   BancoNum, Agencia, Conta, DigitoAgencia, DigitoConta: string;
-  i, Soma, Resto, Digito, Valor: Integer;
+  i, Soma, Resto, Valor: Integer;
   BancosComuns: array[0..4] of string;
 begin
   // Lista dos bancos mais comuns
@@ -1957,7 +1956,7 @@ end;
 function TFakeDataGenerator.GerarAliquotaImposto(TipoImposto: string = 'ICMS'): Double;
 begin
   TipoImposto := UpperCase(TipoImposto);
-  
+  Result :=  0;
   if TipoImposto = 'ICMS' then
     // Alíquotas comuns de ICMS: 4%, 7%, 12%, 17%, 18%, 25%
     case Random(6) of
@@ -2107,7 +2106,6 @@ function TFakeDataGenerator.GerarEAN13: string;
 var
   EAN: string;
   i, Soma, Resto, DigitoVerif: Integer;
-  Peso: Integer;
 begin
   // Gera os 12 primeiros dígitos do EAN-13
   // Os primeiros 3 dígitos são o código do país (Brasil: 789 ou 790)
@@ -2122,8 +2120,7 @@ begin
     
   // Calcula o dígito verificador (13º dígito)
   Soma := 0;
-  Peso := 1;
-  
+
   for i := 12 downto 1 do
   begin
     Soma := Soma + StrToInt(EAN[i]) * (1 + 2 * (i mod 2));
@@ -2475,12 +2472,11 @@ function TFakeDataGenerator.GerarDataFormatura(AnoInicio: Integer = 0): TDateTim
 var
   AnoBase, MesBase, DiaBase: Word;
   DuracaoCurso: Integer;
-  DataBase: TDateTime;
 begin
   // Se não foi informado o ano de início, gera aleatoriamente
   if AnoInicio = 0 then
     AnoInicio := YearOf(Date) - Random(10) - 3; // Entre 3 e 12 anos atrás
-  
+  DuracaoCurso := 0;
   // Duração típica do curso (em anos)
   case Random(6) of
     0, 1, 2: DuracaoCurso := 4; // 50% de chance: cursos de 4 anos (maioria)
